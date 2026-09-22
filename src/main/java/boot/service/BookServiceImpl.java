@@ -1,13 +1,16 @@
 package boot.service;
 
 import boot.dto.BookDto;
+import boot.dto.BookSearchParametersDto;
 import boot.dto.CreateBookRequestDto;
 import boot.exception.EntityNotFoundException;
 import boot.mapper.BookMapper;
 import boot.model.Book;
-import boot.repository.BookRepository;
+import boot.repository.SpecificationBuilder;
+import boot.repository.book.BookRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +20,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     private final BookMapper bookMapper;
+
+    private final SpecificationBuilder<Book, BookSearchParametersDto> bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto bookDto) {
@@ -53,5 +58,15 @@ public class BookServiceImpl implements BookService {
         bookMapper.updateBookFromDto(bookDto, book);
 
         return bookMapper.toBookDto(book);
+    }
+
+    @Override
+    public List<BookDto> search(BookSearchParametersDto searchParameters) {
+        Specification<Book> specification = bookSpecificationBuilder
+                .buildSpecification(searchParameters);
+        return bookRepository.findAll(specification)
+                .stream()
+                .map(bookMapper::toBookDto)
+                .toList();
     }
 }

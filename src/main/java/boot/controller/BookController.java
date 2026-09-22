@@ -1,6 +1,7 @@
 package boot.controller;
 
 import boot.dto.BookDto;
+import boot.dto.BookSearchParametersDto;
 import boot.dto.CreateBookRequestDto;
 import boot.service.BookService;
 import java.util.List;
@@ -48,5 +49,10 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteById(id);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> searchBooks(BookSearchParametersDto searchParameters) {
+        return bookService.search(searchParameters);
     }
 }
