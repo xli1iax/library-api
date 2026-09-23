@@ -1,6 +1,7 @@
 package boot.service;
 
 import boot.dto.BookDto;
+import boot.dto.BookSearchParametersDto;
 import boot.dto.CreateBookRequestDto;
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface BookService {
     void deleteById(Long id);
 
     BookDto updateBook(Long id, CreateBookRequestDto bookDto);
+
+    List<BookDto> search(BookSearchParametersDto searchParameters);
 }
